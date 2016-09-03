@@ -6,16 +6,16 @@ require('../../styles/facebook.scss');
 export default class FbLogin extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { user: null, loggedIn: false }
+    this.state = { user: JSON.parse(localStorage.getItem('fakebook_user')) }
   }
 
   responseFacebook(response) {
     console.log(response);
-    this.setState({ user: response, loggedIn: !this.state.loggedIn });
+    localStorage.setItem('fakebook_user', JSON.stringify(response));
+    this.setState({ user: JSON.parse(localStorage.getItem('fakebook_user')) });
   }
 
   render() {
-    console.log(this.state.user);
     return (
       <div>
         {this.state.user
@@ -25,7 +25,7 @@ export default class FbLogin extends React.Component {
             </div>
           : <FacebookLogin
               appId="145051979269944"
-              autoLoad={this.state.loggedIn}
+              autoLoad={false}
               fields="name,email,picture"
               cssClass="test"
               textButton="We have the power Michael!"
@@ -38,6 +38,7 @@ export default class FbLogin extends React.Component {
 
   logout() {
     console.log('hit');
-    this.setState({ user: null, loggedIn: !this.state.loggedIn })
+    localStorage.clear();
+    this.setState({ user: null })
   }
 }

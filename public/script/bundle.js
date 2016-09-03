@@ -28941,7 +28941,7 @@
 	
 	    var _this = _possibleConstructorReturn(this, (FbLogin.__proto__ || Object.getPrototypeOf(FbLogin)).call(this, props));
 	
-	    _this.state = { user: null, loggedIn: false };
+	    _this.state = { user: JSON.parse(localStorage.getItem('fakebook_user')) };
 	    return _this;
 	  }
 	
@@ -28949,12 +28949,12 @@
 	    key: 'responseFacebook',
 	    value: function responseFacebook(response) {
 	      console.log(response);
-	      this.setState({ user: response, loggedIn: !this.state.loggedIn });
+	      localStorage.setItem('fakebook_user', JSON.stringify(response));
+	      this.setState({ user: JSON.parse(localStorage.getItem('fakebook_user')) });
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      console.log(this.state.user);
 	      return _react2.default.createElement(
 	        'div',
 	        null,
@@ -28969,7 +28969,7 @@
 	          )
 	        ) : _react2.default.createElement(_reactFacebookLogin2.default, {
 	          appId: '145051979269944',
-	          autoLoad: this.state.loggedIn,
+	          autoLoad: false,
 	          fields: 'name,email,picture',
 	          cssClass: 'test',
 	          textButton: 'We have the power Michael!',
@@ -28981,7 +28981,8 @@
 	    key: 'logout',
 	    value: function logout() {
 	      console.log('hit');
-	      this.setState({ user: null, loggedIn: !this.state.loggedIn });
+	      localStorage.clear();
+	      this.setState({ user: null });
 	    }
 	  }]);
 	
