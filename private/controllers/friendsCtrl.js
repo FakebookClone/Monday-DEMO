@@ -13,5 +13,12 @@ module.exports = {
     db.readFriends(function(err, r) {
       res.json(r);
     })
+  },
+  deleteFriend: function(req, res, next) {
+    db.deleteFriend(req.params.personId, function(err, r){
+      db.readFriends(function(err, r) {
+        res.json(r);
+      })
+    })
   }
 }

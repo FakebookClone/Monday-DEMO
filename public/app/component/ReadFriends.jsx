@@ -1,9 +1,10 @@
 import React from 'react';
 import Axios from 'axios';
+import DeleteFriend from './DeleteFriend.jsx';
 
 export default class ReadFriends extends React.Component {
-  constructor(props) {
-    super(props)
+  constructor() {
+    super();
   }
 
   render() {
@@ -13,7 +14,10 @@ export default class ReadFriends extends React.Component {
         <ul>
           {this.props.friends.map( (value, index) => {
             return (
-              <li key={index}>{value.first_name} {value.last_name}</li>
+              <div>
+                <li className='same-line' key={index}>{value.first_name} {value.last_name}</li>
+                <DeleteFriend person={value.friend_id} update={this.props.update} />
+              </div>
             )
           })}
         </ul>
