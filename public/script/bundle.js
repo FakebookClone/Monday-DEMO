@@ -70,6 +70,14 @@
 	
 	var _ReadFriends2 = _interopRequireDefault(_ReadFriends);
 	
+	var _FacebookLogin = __webpack_require__(261);
+	
+	var _FacebookLogin2 = _interopRequireDefault(_FacebookLogin);
+	
+	var _AmazonWebService = __webpack_require__(269);
+	
+	var _AmazonWebService2 = _interopRequireDefault(_AmazonWebService);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -78,7 +86,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	__webpack_require__(260);
+	__webpack_require__(267);
 	
 	var App = function (_React$Component) {
 		_inherits(App, _React$Component);
@@ -135,7 +143,9 @@
 						'Welcome to App'
 					),
 					_react2.default.createElement(_CreateFriend2.default, { update: this.updateFriends.bind(this) }),
-					_react2.default.createElement(_ReadFriends2.default, { update: this.updateFriends.bind(this), friends: this.state.friends })
+					_react2.default.createElement(_ReadFriends2.default, { update: this.updateFriends.bind(this), friends: this.state.friends }),
+					_react2.default.createElement(_FacebookLogin2.default, null),
+					_react2.default.createElement(_AmazonWebService2.default, null)
 				);
 			}
 		}, {
@@ -28649,7 +28659,7 @@
 	
 	var _DeleteFriend2 = _interopRequireDefault(_DeleteFriend);
 	
-	var _EditFriend = __webpack_require__(264);
+	var _EditFriend = __webpack_require__(260);
 	
 	var _EditFriend2 = _interopRequireDefault(_EditFriend);
 	
@@ -28678,7 +28688,6 @@
 	    value: function render() {
 	      var _this2 = this;
 	
-	      console.log('edit id', this.state.editId);
 	      return _react2.default.createElement(
 	        'div',
 	        null,
@@ -28799,20 +28808,212 @@
 /* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _axios = __webpack_require__(235);
+	
+	var _axios2 = _interopRequireDefault(_axios);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var EditFriend = function (_React$Component) {
+	  _inherits(EditFriend, _React$Component);
+	
+	  function EditFriend(props) {
+	    _classCallCheck(this, EditFriend);
+	
+	    var _this = _possibleConstructorReturn(this, (EditFriend.__proto__ || Object.getPrototypeOf(EditFriend)).call(this, props));
+	
+	    _this.state = {
+	      first_name: _this.props.person.first_name,
+	      last_name: _this.props.person.last_name
+	    };
+	    return _this;
+	  }
+	
+	  _createClass(EditFriend, [{
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+	
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'same-line' },
+	        this.props.editValues.showEditButton ? _react2.default.createElement(
+	          'button',
+	          { onClick: function onClick() {
+	              _this2.props.toggleId(_this2.props.person.friend_id);_this2.props.toggle();
+	            } },
+	          'Edit'
+	        ) : null,
+	        this.props.editId === this.props.person.friend_id ? _react2.default.createElement(
+	          'div',
+	          { className: 'same-line' },
+	          _react2.default.createElement('input', { onChange: this.first_nameCatcher.bind(this), className: 'same-line', value: this.state.first_name }),
+	          _react2.default.createElement('input', { onChange: this.last_nameCatcher.bind(this), className: 'same-line', value: this.state.last_name }),
+	          _react2.default.createElement(
+	            'button',
+	            { onClick: this.saveEdit.bind(this), className: 'same-line' },
+	            'Save'
+	          )
+	        ) : null
+	      );
+	    }
+	  }, {
+	    key: 'first_nameCatcher',
+	    value: function first_nameCatcher(e) {
+	      this.setState({ first_name: e.target.value });
+	    }
+	  }, {
+	    key: 'last_nameCatcher',
+	    value: function last_nameCatcher(e) {
+	      this.setState({ last_name: e.target.value });
+	    }
+	  }, {
+	    key: 'saveEdit',
+	    value: function saveEdit() {
+	      var _this3 = this;
+	
+	      _axios2.default.put('/api/friend/' + this.props.person.friend_id, { first_name: this.state.first_name, last_name: this.state.last_name }).then(function (r) {
+	        _this3.props.update(r.data);
+	        _this3.props.toggleId(null);
+	        _this3.props.toggle();
+	      });
+	    }
+	  }]);
+	
+	  return EditFriend;
+	}(_react2.default.Component);
+	
+	exports.default = EditFriend;
+
+/***/ },
+/* 261 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactFacebookLogin = __webpack_require__(262);
+	
+	var _reactFacebookLogin2 = _interopRequireDefault(_reactFacebookLogin);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	__webpack_require__(263);
+	
+	var FbLogin = function (_React$Component) {
+	  _inherits(FbLogin, _React$Component);
+	
+	  function FbLogin(props) {
+	    _classCallCheck(this, FbLogin);
+	
+	    var _this = _possibleConstructorReturn(this, (FbLogin.__proto__ || Object.getPrototypeOf(FbLogin)).call(this, props));
+	
+	    _this.state = { user: null, loggedIn: false };
+	    return _this;
+	  }
+	
+	  _createClass(FbLogin, [{
+	    key: 'responseFacebook',
+	    value: function responseFacebook(response) {
+	      console.log(response);
+	      this.setState({ user: response, loggedIn: !this.state.loggedIn });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      console.log(this.state.user);
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        this.state.user ? _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement('img', { src: this.state.user.picture.data.url }),
+	          _react2.default.createElement(
+	            'button',
+	            { onClick: this.logout.bind(this) },
+	            'Logout'
+	          )
+	        ) : _react2.default.createElement(_reactFacebookLogin2.default, {
+	          appId: '145051979269944',
+	          autoLoad: this.state.loggedIn,
+	          fields: 'name,email,picture',
+	          cssClass: 'test',
+	          textButton: 'We have the power Michael!',
+	          callback: this.responseFacebook.bind(this)
+	        })
+	      );
+	    }
+	  }, {
+	    key: 'logout',
+	    value: function logout() {
+	      console.log('hit');
+	      this.setState({ user: null, loggedIn: !this.state.loggedIn });
+	    }
+	  }]);
+	
+	  return FbLogin;
+	}(_react2.default.Component);
+	
+	exports.default = FbLogin;
+
+/***/ },
+/* 262 */
+/***/ function(module, exports, __webpack_require__) {
+
+	!function(e,t){ true?module.exports=t(__webpack_require__(1)):"function"==typeof define&&define.amd?define(["react"],t):"object"==typeof exports?exports.FacebookLogin=t(require("react")):e.FacebookLogin=t(e.react)}(this,function(e){return function(e){function t(n){if(o[n])return o[n].exports;var r=o[n]={exports:{},id:n,loaded:!1};return e[n].call(r.exports,r,r.exports,t),r.loaded=!0,r.exports}var o={};return t.m=e,t.c=o,t.p="",t(0)}([function(e,t,o){e.exports=o(2)},function(e,t,o){"use strict";function n(e){return e&&e.__esModule?e:{"default":e}}function r(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function i(e,t){if(!e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!t||"object"!=typeof t&&"function"!=typeof t?e:t}function a(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function, not "+typeof t);e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(Object.setPrototypeOf?Object.setPrototypeOf(e,t):e.__proto__=t)}Object.defineProperty(t,"__esModule",{value:!0});var c=function(){function e(e,t){for(var o=0;o<t.length;o++){var n=t[o];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}return function(t,o,n){return o&&e(t.prototype,o),n&&e(t,n),t}}(),s=o(5),l=n(s),p=o(3),u=n(p),f=function(e){function t(e){r(this,t);var o=i(this,(t.__proto__||Object.getPrototypeOf(t)).call(this,e));return o.responseApi=function(e){window.FB.api("/me",{fields:o.props.fields},function(t){Object.assign(t,e),o.props.callback(t)})},o.checkLoginState=function(e){e.authResponse?o.responseApi(e.authResponse):o.props.callback&&o.props.callback({status:e.status})},o.click=function(){var e=o.props,t=e.scope,n=e.appId;navigator.userAgent.match("CriOS")?window.location.href="https://www.facebook.com/dialog/oauth?client_id="+n+"&redirect_uri="+window.location.href+"&state=facebookdirect&"+t:window.FB.login(o.checkLoginState,{scope:t})},o}return a(t,e),c(t,[{key:"componentDidMount",value:function(){var e=this,t=this.props,o=t.appId,n=t.xfbml,r=t.cookie,i=t.version,a=t.autoLoad,c=t.language,s=document.getElementById("fb-root");s||(s=document.createElement("div"),s.id="fb-root",document.body.appendChild(s)),window.fbAsyncInit=function(){window.FB.init({version:"v"+i,appId:o,xfbml:n,cookie:r}),(a||window.location.search.includes("facebookdirect"))&&window.FB.getLoginStatus(e.checkLoginState)},function(e,t,o){var n=e.getElementsByTagName(t)[0],r=n,i=n;e.getElementById(o)||(i=e.createElement(t),i.id=o,i.src="//connect.facebook.net/"+c+"/all.js",r.parentNode.insertBefore(i,r))}(document,"script","facebook-jssdk")}},{key:"renderWithFontAwesome",value:function(){var e=this.props,t=e.cssClass,o=e.size,n=e.icon,r=e.textButton,i=e.typeButton;return l["default"].createElement("span",null,l["default"].createElement("link",{rel:"stylesheet",href:"//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"}),l["default"].createElement("button",{type:i,className:t+" "+o,onClick:this.click},l["default"].createElement("i",{className:"fa "+n})," ",r),l["default"].createElement("style",{dangerouslySetInnerHTML:{__html:u["default"]}}))}},{key:"render",value:function(){var e=this.props,t=e.cssClass,o=e.size,n=e.icon,r=e.textButton;return n?this.renderWithFontAwesome():l["default"].createElement("span",null,l["default"].createElement("button",{className:t+" "+o,onClick:this.click},r),l["default"].createElement("style",{dangerouslySetInnerHTML:{__html:u["default"]}}))}}]),t}(l["default"].Component);f.propTypes={callback:s.PropTypes.func.isRequired,appId:s.PropTypes.string.isRequired,xfbml:s.PropTypes.bool,cookie:s.PropTypes.bool,scope:s.PropTypes.string,textButton:s.PropTypes.string,typeButton:s.PropTypes.string,autoLoad:s.PropTypes.bool,size:s.PropTypes.string,fields:s.PropTypes.string,cssClass:s.PropTypes.string,version:s.PropTypes.string,icon:s.PropTypes.string,language:s.PropTypes.string},f.defaultProps={textButton:"Login with Facebook",typeButton:"button",scope:"public_profile,email",xfbml:!1,cookie:!1,size:"metro",fields:"name",cssClass:"kep-login-facebook",version:"2.3",language:"en_US"},t["default"]=f},function(e,t,o){"use strict";function n(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(t,"__esModule",{value:!0});var r=o(1),i=n(r);t["default"]=i["default"]},function(e,t,o){t=e.exports=o(4)(),t.push([e.id,".kep-login-facebook{font-family:Helvetica,sans-serif;font-weight:700;-webkit-font-smoothing:antialiased;color:#fff;cursor:pointer;display:inline-block;font-size:calc(.27548vw + 12.71074px);text-decoration:none;text-transform:uppercase;transition:background-color .3s,border-color .3s;background-color:#4c69ba;border:calc(.06887vw + .67769px) solid #4c69ba;padding:calc(.34435vw + 13.38843px) calc(.34435vw + 18.38843px)}.kep-login-facebook.small{padding:calc(.34435vw + 3.38843px) calc(.34435vw + 8.38843px)}.kep-login-facebook.medium{padding:calc(.34435vw + 8.38843px) calc(.34435vw + 13.38843px)}.kep-login-facebook.metro{border-radius:0}.kep-login-facebook .fa{margin-right:calc(.34435vw + 3.38843px)}",""]),t.locals={"kep-login-facebook":"kep-login-facebook",small:"small",medium:"medium",metro:"metro",fa:"fa"}},function(e,t){e.exports=function(){var e=[];return e.toString=function(){for(var e=[],t=0;t<this.length;t++){var o=this[t];o[2]?e.push("@media "+o[2]+"{"+o[1]+"}"):e.push(o[1])}return e.join("")},e.i=function(t,o){"string"==typeof t&&(t=[[null,t,""]]);for(var n={},r=0;r<this.length;r++){var i=this[r][0];"number"==typeof i&&(n[i]=!0)}for(r=0;r<t.length;r++){var a=t[r];"number"==typeof a[0]&&n[a[0]]||(o&&!a[2]?a[2]=o:o&&(a[2]="("+a[2]+") and ("+o+")"),e.push(a))}},e}},function(t,o){t.exports=e}])});
+
+/***/ },
+/* 263 */
+/***/ function(module, exports, __webpack_require__) {
+
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(261);
+	var content = __webpack_require__(264);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(263)(content, {});
+	var update = __webpack_require__(266)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/index.js!./main.css", function() {
-				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/index.js!./main.css");
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/index.js!./facebook.scss", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/index.js!./facebook.scss");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -28822,21 +29023,21 @@
 	}
 
 /***/ },
-/* 261 */
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(262)();
+	exports = module.exports = __webpack_require__(265)();
 	// imports
 	
 	
 	// module
-	exports.push([module.id, ".same-line {\n  display: inline-block;\n  margin-left: 10px; }\n", ""]);
+	exports.push([module.id, ".test {\n  color: #FFF;\n  font-size: 30px;\n  border-radius: 5px;\n  border: none;\n  background: #4C69BA; }\n\n.kep-login-facebook {\n  font-family: \"Helvetica\", sans-serif;\n  font-weight: bold;\n  -webkit-font-smoothing: antialiased;\n  border-width: calc(0.06887vw + 0.67769px);\n  border-style: solid;\n  color: red;\n  cursor: pointer;\n  display: inline-block;\n  font-size: calc(0.27548vw + 12.71074px);\n  text-decoration: none;\n  text-transform: uppercase;\n  transition: background-color .3s, border-color .3s;\n  background-color: #4C69BA;\n  border-color: #4C69BA;\n  padding: calc(0.34435vw + 13.38843px) calc(0.34435vw + 18.38843px); }\n\n.kep-login-facebook.small {\n  padding: calc(0.34435vw + 3.38843px) calc(0.34435vw + 8.38843px); }\n\n.kep-login-facebook.medium {\n  padding: calc(0.34435vw + 8.38843px) calc(0.34435vw + 13.38843px); }\n\n.kep-login-facebook.metro {\n  border-radius: 0; }\n\n.kep-login-facebook .fa {\n  margin-right: calc(0.34435vw + 3.38843px); }\n", ""]);
 	
 	// exports
 
 
 /***/ },
-/* 262 */
+/* 265 */
 /***/ function(module, exports) {
 
 	/*
@@ -28892,7 +29093,7 @@
 
 
 /***/ },
-/* 263 */
+/* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -29144,7 +29345,47 @@
 
 
 /***/ },
-/* 264 */
+/* 267 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+	
+	// load the styles
+	var content = __webpack_require__(268);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(266)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/index.js!./main.css", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/index.js!./main.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 268 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(265)();
+	// imports
+	
+	
+	// module
+	exports.push([module.id, ".same-line {\n  display: inline-block;\n  margin-left: 10px; }\n", ""]);
+	
+	// exports
+
+
+/***/ },
+/* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29159,10 +29400,6 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _axios = __webpack_require__(235);
-	
-	var _axios2 = _interopRequireDefault(_axios);
-	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -29171,76 +29408,34 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var EditFriend = function (_React$Component) {
-	  _inherits(EditFriend, _React$Component);
+	var AmazonWebService = function (_React$Component) {
+	  _inherits(AmazonWebService, _React$Component);
 	
-	  function EditFriend(props) {
-	    _classCallCheck(this, EditFriend);
+	  function AmazonWebService() {
+	    _classCallCheck(this, AmazonWebService);
 	
-	    var _this = _possibleConstructorReturn(this, (EditFriend.__proto__ || Object.getPrototypeOf(EditFriend)).call(this, props));
-	
-	    _this.state = {
-	      first_name: _this.props.person.first_name,
-	      last_name: _this.props.person.last_name
-	    };
-	    return _this;
+	    return _possibleConstructorReturn(this, (AmazonWebService.__proto__ || Object.getPrototypeOf(AmazonWebService)).call(this));
 	  }
 	
-	  _createClass(EditFriend, [{
+	  _createClass(AmazonWebService, [{
 	    key: 'render',
 	    value: function render() {
-	      var _this2 = this;
-	
 	      return _react2.default.createElement(
 	        'div',
-	        { className: 'same-line' },
-	        this.props.editValues.showEditButton ? _react2.default.createElement(
-	          'button',
-	          { onClick: function onClick() {
-	              _this2.props.toggleId(_this2.props.person.friend_id);_this2.props.toggle();
-	            } },
-	          'Edit'
-	        ) : null,
-	        this.props.editId === this.props.person.friend_id ? _react2.default.createElement(
-	          'div',
-	          { className: 'same-line' },
-	          _react2.default.createElement('input', { onChange: this.first_nameCatcher.bind(this), className: 'same-line', value: this.state.first_name }),
-	          _react2.default.createElement('input', { onChange: this.last_nameCatcher.bind(this), className: 'same-line', value: this.state.last_name }),
-	          _react2.default.createElement(
-	            'button',
-	            { onClick: this.saveEdit.bind(this), className: 'same-line' },
-	            'Save'
-	          )
-	        ) : null
+	        null,
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          'Amazon Web Service Component'
+	        )
 	      );
-	    }
-	  }, {
-	    key: 'first_nameCatcher',
-	    value: function first_nameCatcher(e) {
-	      this.setState({ first_name: e.target.value });
-	    }
-	  }, {
-	    key: 'last_nameCatcher',
-	    value: function last_nameCatcher(e) {
-	      this.setState({ last_name: e.target.value });
-	    }
-	  }, {
-	    key: 'saveEdit',
-	    value: function saveEdit() {
-	      var _this3 = this;
-	
-	      _axios2.default.put('/api/friend/' + this.props.person.friend_id, { first_name: this.state.first_name, last_name: this.state.last_name }).then(function (r) {
-	        _this3.props.update(r.data);
-	        _this3.props.toggleId(null);
-	        _this3.props.toggle();
-	      });
 	    }
 	  }]);
 	
-	  return EditFriend;
+	  return AmazonWebService;
 	}(_react2.default.Component);
 	
-	exports.default = EditFriend;
+	exports.default = AmazonWebService;
 
 /***/ }
 /******/ ]);

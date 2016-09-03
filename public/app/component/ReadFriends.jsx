@@ -10,7 +10,6 @@ export default class ReadFriends extends React.Component {
   }
 
   render() {
-    console.log('edit id', this.state.editId);
     return (
       <div>
         <h1>Friends List</h1>

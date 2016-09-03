@@ -4,6 +4,8 @@ import {Router, Route} from 'react-router';
 import Axios from 'axios';
 import CreateFriend from './component/CreateFriend.jsx';
 import ReadFriends from './component/ReadFriends.jsx';
+import FbLogin from './component/FacebookLogin.jsx';
+import AmazonWebService from './component/AmazonWebService.jsx';
 
 require('../styles/main.css');
 
@@ -45,6 +47,8 @@ class App extends React.Component {
   			<p>Welcome to App</p>
         <CreateFriend update={this.updateFriends.bind(this)} />
 				<ReadFriends update={this.updateFriends.bind(this)} friends={this.state.friends} />
+				<FbLogin />
+				<AmazonWebService />
   		</div>
 		)
 	}
