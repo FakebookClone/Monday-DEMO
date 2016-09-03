@@ -4,7 +4,7 @@ import {Router, Route} from 'react-router';
 import Axios from 'axios';
 import CreateFriend from './component/CreateFriend.jsx';
 import ReadFriends from './component/ReadFriends.jsx';
-import DeleteFriend from './component/DeleteFriend.jsx';
+
 require('../styles/main.css');
 
 class App extends React.Component {
@@ -24,7 +24,16 @@ class App extends React.Component {
     Axios.get('/api/friends').then(r => {
       if(this.state.friends.length !== r.data.length) {
         this.setState({ friends: r.data });
-      }
+      } else {
+				for(var i in this.state.friends) {
+					if(this.state.friends[i].first_name !== r.data[i].first_name) {
+						this.setState({ friends: r.data });
+					}
+					if(this.state.friends[i].last_name !== r.data[i].last_name) {
+						this.setState({ friends: r.data });
+					}
+				}
+			}
     })
 
     return true;
@@ -41,6 +50,7 @@ class App extends React.Component {
 	}
 
 	updateFriends(friends) {
+		console.log('Rerender triggered');
 		this.setState({ friends: friends })
 	}
 }

@@ -1,1 +1,2 @@
-SELECT * FROM friends;
+SELECT * FROM friends
+order by friend_id;

@@ -16,6 +16,7 @@ app.use(bodyParser.json());
 
 app.post('/api/friends', friendsCtrl.createFriend);
 app.get('/api/friends', friendsCtrl.readFriends);
+app.put('/api/friend/:personId', friendsCtrl.updateFriend);
 app.delete('/api/friend/:personId', friendsCtrl.deleteFriend);
 
 

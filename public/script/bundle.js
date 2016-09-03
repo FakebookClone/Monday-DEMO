@@ -70,10 +70,6 @@
 	
 	var _ReadFriends2 = _interopRequireDefault(_ReadFriends);
 	
-	var _DeleteFriend = __webpack_require__(259);
-	
-	var _DeleteFriend2 = _interopRequireDefault(_DeleteFriend);
-	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -85,62 +81,72 @@
 	__webpack_require__(260);
 	
 	var App = function (_React$Component) {
-	  _inherits(App, _React$Component);
+		_inherits(App, _React$Component);
 	
-	  function App() {
-	    _classCallCheck(this, App);
+		function App() {
+			_classCallCheck(this, App);
 	
-	    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this));
+			var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this));
 	
-	    _this.state = { friends: [] };
-	    return _this;
-	  }
+			_this.state = { friends: [] };
+			return _this;
+		}
 	
-	  _createClass(App, [{
-	    key: 'componentWillMount',
-	    value: function componentWillMount() {
-	      var _this2 = this;
+		_createClass(App, [{
+			key: 'componentWillMount',
+			value: function componentWillMount() {
+				var _this2 = this;
 	
-	      _axios2.default.get('/api/friends').then(function (r) {
-	        _this2.setState({ friends: r.data });
-	      });
-	    }
-	  }, {
-	    key: 'shouldComponentUpdate',
-	    value: function shouldComponentUpdate() {
-	      var _this3 = this;
+				_axios2.default.get('/api/friends').then(function (r) {
+					_this2.setState({ friends: r.data });
+				});
+			}
+		}, {
+			key: 'shouldComponentUpdate',
+			value: function shouldComponentUpdate() {
+				var _this3 = this;
 	
-	      _axios2.default.get('/api/friends').then(function (r) {
-	        if (_this3.state.friends.length !== r.data.length) {
-	          _this3.setState({ friends: r.data });
-	        }
-	      });
+				_axios2.default.get('/api/friends').then(function (r) {
+					if (_this3.state.friends.length !== r.data.length) {
+						_this3.setState({ friends: r.data });
+					} else {
+						for (var i in _this3.state.friends) {
+							if (_this3.state.friends[i].first_name !== r.data[i].first_name) {
+								_this3.setState({ friends: r.data });
+							}
+							if (_this3.state.friends[i].last_name !== r.data[i].last_name) {
+								_this3.setState({ friends: r.data });
+							}
+						}
+					}
+				});
 	
-	      return true;
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(
-	          'p',
-	          null,
-	          'Welcome to App'
-	        ),
-	        _react2.default.createElement(_CreateFriend2.default, { update: this.updateFriends.bind(this) }),
-	        _react2.default.createElement(_ReadFriends2.default, { update: this.updateFriends.bind(this), friends: this.state.friends })
-	      );
-	    }
-	  }, {
-	    key: 'updateFriends',
-	    value: function updateFriends(friends) {
-	      this.setState({ friends: friends });
-	    }
-	  }]);
+				return true;
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				return _react2.default.createElement(
+					'div',
+					null,
+					_react2.default.createElement(
+						'p',
+						null,
+						'Welcome to App'
+					),
+					_react2.default.createElement(_CreateFriend2.default, { update: this.updateFriends.bind(this) }),
+					_react2.default.createElement(_ReadFriends2.default, { update: this.updateFriends.bind(this), friends: this.state.friends })
+				);
+			}
+		}, {
+			key: 'updateFriends',
+			value: function updateFriends(friends) {
+				console.log('Rerender triggered');
+				this.setState({ friends: friends });
+			}
+		}]);
 	
-	  return App;
+		return App;
 	}(_react2.default.Component);
 	
 	_reactDom2.default.render(_react2.default.createElement(App, null), document.getElementById('app'));
@@ -28643,6 +28649,10 @@
 	
 	var _DeleteFriend2 = _interopRequireDefault(_DeleteFriend);
 	
+	var _EditFriend = __webpack_require__(264);
+	
+	var _EditFriend2 = _interopRequireDefault(_EditFriend);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -28657,7 +28667,10 @@
 	  function ReadFriends() {
 	    _classCallCheck(this, ReadFriends);
 	
-	    return _possibleConstructorReturn(this, (ReadFriends.__proto__ || Object.getPrototypeOf(ReadFriends)).call(this));
+	    var _this = _possibleConstructorReturn(this, (ReadFriends.__proto__ || Object.getPrototypeOf(ReadFriends)).call(this));
+	
+	    _this.state = { editId: null, showEdit: false, showEditButton: true };
+	    return _this;
 	  }
 	
 	  _createClass(ReadFriends, [{
@@ -28665,6 +28678,7 @@
 	    value: function render() {
 	      var _this2 = this;
 	
+	      console.log('edit id', this.state.editId);
 	      return _react2.default.createElement(
 	        'div',
 	        null,
@@ -28682,16 +28696,27 @@
 	              null,
 	              _react2.default.createElement(
 	                'li',
-	                { className: 'same-line', key: index },
+	                { className: 'same-line', key: value.friend_id },
 	                value.first_name,
 	                ' ',
-	                value.last_name
-	              ),
-	              _react2.default.createElement(_DeleteFriend2.default, { person: value.friend_id, update: _this2.props.update })
+	                value.last_name,
+	                _react2.default.createElement(_EditFriend2.default, { editId: _this2.state.editId, toggleId: _this2.updateEditId.bind(_this2), editValues: { showEdit: _this2.state.showEdit, showEditButton: _this2.state.showEditButton }, toggle: _this2.toggleEdit.bind(_this2), person: value, update: _this2.props.update }),
+	                _react2.default.createElement(_DeleteFriend2.default, { toggle: _this2.toggleEdit.bind(_this2), person: value.friend_id, update: _this2.props.update })
+	              )
 	            );
 	          })
 	        )
 	      );
+	    }
+	  }, {
+	    key: 'updateEditId',
+	    value: function updateEditId(id) {
+	      this.setState({ editId: id });
+	    }
+	  }, {
+	    key: 'toggleEdit',
+	    value: function toggleEdit() {
+	      this.setState({ showEdit: !this.state.showEdit, showEditButton: !this.state.showEditButton });
 	    }
 	  }]);
 	
@@ -28746,7 +28771,7 @@
 	        _react2.default.createElement(
 	          'button',
 	          { onClick: this.deleteFriend.bind(this) },
-	          'Delete Friend'
+	          'Delete'
 	        )
 	      );
 	    }
@@ -28759,6 +28784,7 @@
 	        method: 'DELETE',
 	        url: 'http://localhost:3000/api/friend/' + this.props.person
 	      }).then(function (r) {
+	        _this2.props.toggle();
 	        _this2.props.update(r.data);
 	      });
 	    }
@@ -29116,6 +29142,105 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
+
+/***/ },
+/* 264 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _axios = __webpack_require__(235);
+	
+	var _axios2 = _interopRequireDefault(_axios);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var EditFriend = function (_React$Component) {
+	  _inherits(EditFriend, _React$Component);
+	
+	  function EditFriend(props) {
+	    _classCallCheck(this, EditFriend);
+	
+	    var _this = _possibleConstructorReturn(this, (EditFriend.__proto__ || Object.getPrototypeOf(EditFriend)).call(this, props));
+	
+	    _this.state = {
+	      first_name: _this.props.person.first_name,
+	      last_name: _this.props.person.last_name
+	    };
+	    return _this;
+	  }
+	
+	  _createClass(EditFriend, [{
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+	
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'same-line' },
+	        this.props.editValues.showEditButton ? _react2.default.createElement(
+	          'button',
+	          { onClick: function onClick() {
+	              _this2.props.toggleId(_this2.props.person.friend_id);_this2.props.toggle();
+	            } },
+	          'Edit'
+	        ) : null,
+	        this.props.editId === this.props.person.friend_id ? _react2.default.createElement(
+	          'div',
+	          { className: 'same-line' },
+	          _react2.default.createElement('input', { onChange: this.first_nameCatcher.bind(this), className: 'same-line', value: this.state.first_name }),
+	          _react2.default.createElement('input', { onChange: this.last_nameCatcher.bind(this), className: 'same-line', value: this.state.last_name }),
+	          _react2.default.createElement(
+	            'button',
+	            { onClick: this.saveEdit.bind(this), className: 'same-line' },
+	            'Save'
+	          )
+	        ) : null
+	      );
+	    }
+	  }, {
+	    key: 'first_nameCatcher',
+	    value: function first_nameCatcher(e) {
+	      this.setState({ first_name: e.target.value });
+	    }
+	  }, {
+	    key: 'last_nameCatcher',
+	    value: function last_nameCatcher(e) {
+	      this.setState({ last_name: e.target.value });
+	    }
+	  }, {
+	    key: 'saveEdit',
+	    value: function saveEdit() {
+	      var _this3 = this;
+	
+	      _axios2.default.put('/api/friend/' + this.props.person.friend_id, { first_name: this.state.first_name, last_name: this.state.last_name }).then(function (r) {
+	        _this3.props.update(r.data);
+	        _this3.props.toggleId(null);
+	        _this3.props.toggle();
+	      });
+	    }
+	  }]);
+	
+	  return EditFriend;
+	}(_react2.default.Component);
+	
+	exports.default = EditFriend;
 
 /***/ }
 /******/ ]);
