@@ -74,7 +74,7 @@
 	
 	var _FacebookLogin2 = _interopRequireDefault(_FacebookLogin);
 	
-	var _AmazonWebService = __webpack_require__(269);
+	var _AmazonWebService = __webpack_require__(267);
 	
 	var _AmazonWebService2 = _interopRequireDefault(_AmazonWebService);
 	
@@ -86,7 +86,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	__webpack_require__(267);
+	__webpack_require__(268);
 	
 	var App = function (_React$Component) {
 		_inherits(App, _React$Component);
@@ -29349,10 +29349,119 @@
 /* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _axios = __webpack_require__(235);
+	
+	var _axios2 = _interopRequireDefault(_axios);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var AmazonWebService = function (_React$Component) {
+	  _inherits(AmazonWebService, _React$Component);
+	
+	  function AmazonWebService() {
+	    _classCallCheck(this, AmazonWebService);
+	
+	    var _this = _possibleConstructorReturn(this, (AmazonWebService.__proto__ || Object.getPrototypeOf(AmazonWebService)).call(this));
+	
+	    _this.state = { file: null, processing: false, uploaded_uri: null };
+	    return _this;
+	  }
+	
+	  _createClass(AmazonWebService, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          'Amazon Web Service Component'
+	        ),
+	        _react2.default.createElement('input', { onChange: this.fileCatcher.bind(this), type: 'file', images: 'images', accept: 'image/*' }),
+	        _react2.default.createElement(
+	          'button',
+	          { onClick: this.handleSubmit.bind(this) },
+	          'Upload'
+	        ),
+	        this.state.processing ? _react2.default.createElement(
+	          'p',
+	          null,
+	          'Processing.. please wait'
+	        ) : null,
+	        this.state.location ? _react2.default.createElement('img', { src: this.state.location }) : null
+	      );
+	    }
+	  }, {
+	    key: 'fileCatcher',
+	    value: function fileCatcher(e) {
+	      var _this2 = this;
+	
+	      var reader = new FileReader();
+	      var file = e.target.files[0];
+	
+	      reader.onload = function (upload) {
+	        _this2.setState({
+	          file: {
+	            imageBody: upload.target.result,
+	            imageName: file.name,
+	            imageExtension: file.type,
+	            userEmail: 'webdev.jameslemire@gmail.com'
+	          }
+	        });
+	      };
+	
+	      reader.readAsDataURL(file);
+	    }
+	  }, {
+	    key: 'handleSubmit',
+	    value: function handleSubmit(e) {
+	      var _this3 = this;
+	
+	      this.setState({
+	        processing: true
+	      });
+	
+	      _axios2.default.post('http://localhost:3000/api/pictureUpload', { file: this.state.file }).then(function (r) {
+	        _this3.setState({
+	          processing: false,
+	          location: r.data.Location
+	        });
+	      });
+	    }
+	  }]);
+	
+	  return AmazonWebService;
+	}(_react2.default.Component);
+	
+	exports.default = AmazonWebService;
+
+/***/ },
+/* 268 */
+/***/ function(module, exports, __webpack_require__) {
+
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(268);
+	var content = __webpack_require__(269);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(266)(content, {});
@@ -29372,7 +29481,7 @@
 	}
 
 /***/ },
-/* 268 */
+/* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(265)();
@@ -29384,59 +29493,6 @@
 	
 	// exports
 
-
-/***/ },
-/* 269 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var AmazonWebService = function (_React$Component) {
-	  _inherits(AmazonWebService, _React$Component);
-	
-	  function AmazonWebService() {
-	    _classCallCheck(this, AmazonWebService);
-	
-	    return _possibleConstructorReturn(this, (AmazonWebService.__proto__ || Object.getPrototypeOf(AmazonWebService)).call(this));
-	  }
-	
-	  _createClass(AmazonWebService, [{
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(
-	          'p',
-	          null,
-	          'Amazon Web Service Component'
-	        )
-	      );
-	    }
-	  }]);
-	
-	  return AmazonWebService;
-	}(_react2.default.Component);
-	
-	exports.default = AmazonWebService;
 
 /***/ }
 /******/ ]);
